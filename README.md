@@ -1,5 +1,5 @@
 # YouTube-Remove-Border-Radius
-<img src="icon128.png">
+<img src="icon128.png" width="45" height="45">
 youtube ui is suck i make a Extension it remove all "Border Radius css"<br>
 <a href="https://addons.mozilla.org/en-GB/firefox/addon/youtube-remove-border-radius/" class="reflective-btn">install (firefox)</a>
 
