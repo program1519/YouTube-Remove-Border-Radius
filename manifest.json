@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube - Remove Border Radius",
+  "version": "1.1.0",
+  "description": "Remove border-radius CSS on YouTube desktop and mobile.",
+  "permissions": ["scripting", "activeTab"],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://m.youtube.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://m.youtube.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "com.program1519.youtube.removeborder@example.com"
+    }
+  }
+}
