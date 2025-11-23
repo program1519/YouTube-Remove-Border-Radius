@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>YouTube Player Radius — Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="card">
+    <header class="card-header">
+      <div class="title">Remove player border radius</div>
+      <div class="subtitle">setting </div>
+    </header>
+
+    <main class="card-body">
+      <label class="switch-row">
+        <span>Toggle on/off (Player only)</span>
+        <label class="switch">
+          <input id="toggle" type="checkbox">
+          <span class="slider"></span>
+        </label>
+      </label>
+
+      <p class="hint">When enabled, it will remove the rounded corners of the video player only — other parts of YouTube will remain unchanged.</p>
+
+    
+ 
+
+    </main>
+
+    <footer class="card-footer">
+      <button id="closeBtn" class="btn">Close</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

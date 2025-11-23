@@ -1,33 +1,78 @@
-(function(){
+(function () {
   'use strict';
-  const css = `
-  body, body *, 
-  ytd-app, ytd-page-manager, ytm-app, ytm-page-manager, 
-  #content, #container, #masthead-container, #header, #items, #primary, #secondary,
-  .ytp-chrome-top, .ytp-chrome-bottom, .ytp-button, .ytp-menu, .ytp-slider,
-  .ytp-thumbnail, .ytp-panel, .ytp-panel-content, .ytp-panel-promo,
-  .ytp-progress-bar-container, .ytp-ce-element, .ytp-title, .ytp-title-channel,
-  .ytd-video-renderer, .ytd-rich-grid-media, .ytd-compact-video-renderer,
-  .ytm-rich-item-renderer, .ytm-media-item, .ytm-thumbnail, .ytm-video-with-context-renderer {
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }`;
 
-  function inject() {
-    try {
-      if (document.getElementById('yt-remove-radius-style')) return;
-      const s = document.createElement('style');
-      s.id = 'yt-remove-radius-style';
-      s.type = 'text/css';
-      s.appendChild(document.createTextNode(css));
-      (document.head || document.documentElement).appendChild(s);
-    } catch (e) {
-      console.warn('failed', e);
+  const STYLE_ID_GLOBAL = 'yt-remove-radius-global';
+  const STYLE_ID_PLAYER = 'yt-remove-radius-player';
+
+  const cssGlobal = `
+    body, body *,
+    ytd-app, ytd-page-manager, ytm-app, ytm-page-manager,
+    #content, #container, #masthead-container, #header,
+    #items, #primary, #secondary,
+    .ytp-chrome-top, .ytp-chrome-bottom, .ytp-button, .ytp-menu, .ytp-slider,
+    .ytp-thumbnail, .ytp-panel, .ytp-panel-content, .ytp-panel-promo,
+    .ytp-progress-bar-container, .ytp-ce-element, .ytp-title, .ytp-title-channel,
+    .ytd-video-renderer, .ytd-rich-grid-media, .ytd-compact-video-renderer,
+    .ytm-rich-item-renderer, .ytm-media-item, .ytm-thumbnail, .ytm-video-with-context-renderer {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+  `;
+
+  const cssPlayer = `
+    /* Safe remove only the player area */
+    ytd-player,
+    #player,
+    #player-container,
+    #player-wide-container,
+    #movie_player,
+    .html5-video-player {
+      border-radius: 0 !important;
+      overflow: visible !important;
+      box-shadow: none !important;
+    }
+
+    video,
+    .html5-main-video {
+      border-radius: 0 !important;
+      overflow: visible !important;
+      box-shadow: none !important;
+      clip-path: none !important;
+      mask-image: none !important;
+    }
+  `;
+
+  function addStyle(id, css) {
+    if (document.getElementById(id)) return;
+    const s = document.createElement('style');
+    s.id = id;
+    s.textContent = css;
+    document.documentElement.appendChild(s);
+  }
+
+  function removeStyle(id) {
+    const s = document.getElementById(id);
+    if (s) s.remove();
+  }
+
+  function applyMode(enabled) {
+    if (enabled) {
+      removeStyle(STYLE_ID_GLOBAL);
+      addStyle(STYLE_ID_PLAYER, cssPlayer);
+    } else {
+      removeStyle(STYLE_ID_PLAYER);
+      addStyle(STYLE_ID_GLOBAL, cssGlobal);
     }
   }
 
-  inject();
+  chrome.storage.sync.get({ playerOnly: false }, (res) => {
+    applyMode(res.playerOnly);
+  });
 
-  const obs = new MutationObserver(() => inject());
-  obs.observe(document.documentElement || document, { childList: true, subtree: true });
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.playerOnly) {
+      applyMode(changes.playerOnly.newValue);
+    }
+  });
+
 })();
